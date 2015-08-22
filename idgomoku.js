@@ -2,7 +2,7 @@ window.onload=function(){ //entry point
   initGame();
 };
 //fields for game ---------------------------
-var debug=1;
+var debug= false;
 var turn = 0;
 var turnstr=["black","white"];
 var maxdims = 1;

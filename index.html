@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-type" content="text/html; charset=sjis">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <script type="text/javascript" src="./exarray.js"></script>
 <script type="text/javascript" src="./idgomoku.js"></script>
@@ -35,8 +35,29 @@
 <div id="debugout"> </div>
 <br>
 <hr>
+  <h2>遊び方:</h2>
+  <ul>
+    <li>人間 vs 人間のゲームです。</li>
+    <li>石を置きたい座標をスペースで区切ってinputに入力してください。<br>
+    たとえば、座標(1,0,2)に置きたいときは "1 0 2" と入力します。</li>
+    <li>先手(黒)がすでに(0)に打っている状態から始まります。</li>
+    <li>自分の石を５個一列に並べた方が勝ちです。</li>
+    <li>ただし、先手（黒）が６個以上並べると黒の負けになります。</li>
+    <li>        後手（白）は６個以上並べても勝ちなります。</li>
+  </ul>
+  <h2>How to Play:</h2>
+  <ul>
+    <li>This game is for only human player vs human player.</li>
+    <li>Please type the location with a space you want to put into input window.<br>
+    For example, the stone is put at (1,0,2) with the input "1 0 2".</li>
+    <li>The game is started after the first player(black) put a black stone at (0).</li>
+    <li>The player wins when the 5 hist stones are lined up.</li>
+    <li>However black player loses when the 6 or more black stones are lined up.</li>
+    <li>white         player wins  when the 6 or more black stones are lined up.</li>
+  </ul>
+<hr>
   <address>
-  Inf Dimensional Gomoku
+  Infinite Dimensional Gomoku
   version <span id="versiondisplay"></span><br>
   <script type="text/javascript" src="./idgomoku_version.js"></script>
   programed by <a href="http://twitter.com/#!/koteitan">koteitan</a><br>
