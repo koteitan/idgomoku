@@ -10,7 +10,7 @@ var stonelist=[]; //stoned[p][s][d]=location of s th stone of player p in dim d.
 //initialize game----------------------------
 var initGame=function(){
   document.getElementById("console").innerHTML = "";
-  putOut("The new game was initialized.<br>");  
+  putOut("GAME START!<br>");  
   stonelist=[
     [//p=0
       [0]//s=0
