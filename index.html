@@ -11,17 +11,27 @@
   a:visited{color:black;border-style:none;text-decoration:underline}
   a:hover{color:black;border-color:none;text-decoration:underline}
   address{text-align:right;font-style:normal}
-  td{border-color:black;text-align:center}
-  th{border-color:black;text-align:center}
-  input{border-style:solid;border-color:black;background-color:#000000;color:black}
+  input{border-style:solid;border-color:black;background-color:black;color:white}
   .tdbutton{border-width:1px;border-style:solid;border-color:white;height:30px;width:30px}
   hr{border-style:solid}
   canvas{padding:0px;margin:0px}
+  .console{font-family:MS Gothic;color:white;background-color:black}
 --></style>
 <title>Inf Dimensional Gomoku</title>
 </head>
 <body>
-Infinite Dimensional Gomoku</div>
+<div>Infinite Dimensional Gomoku</div>
+<table>
+<tr><td>input:</td>
+<td><form name=form1><input name=command type=text id="inputwindow" class="console" onkeydown="if(window.event.keyCode==13){form1.command.value=receiveCommand(form1.command.value);return false;}"></input> <input type=button value=send onclick="javscript:form1.command.value=receiveCommand(form1.command.value);"></form></td>
+
+
+
+
+</tr><tr>
+<td>output :</div></td>
+<td><div id="console" class="console"></td>
+</tr></table>
 <div id="debugout"> </div>
 <br>
 <hr>
