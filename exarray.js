@@ -86,7 +86,11 @@ Array.prototype.toString = function(){
   for(i=0;i<this.length-1;i++){
     s+=this[i].toString()+", ";
   }
-  s+=this[i].toString()+"]";
+  if(this.length==0){
+    s+="]";
+  }else{
+    s+=this[i].toString()+"]";
+  }
   return s;
 }
 Array.prototype.isEqual = function(a){
