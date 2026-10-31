@@ -49,13 +49,13 @@ var receiveCommand=function(str){
   var newstone=new Array(dims); // newstone[d]=location of the new stone
   for(var d=0;d<dims;d++){
     if(!isFinite(a[d])){
-      putOut("¥""+a[d]+"¥""+"is not a number.<br>");
+      putOut("\""+a[d]+"\""+"is not a number.<br>");
       putOut(turnstr[turn]+(stonelist[turn].length+1)+"> ");
       return form1.command.value;
     }
     newstone[d]=parseInt(a[d]);
     if(isNaN(newstone[d])){
-      putOut("¥""+a[d]+"¥""+"is not a number.<br>");
+      putOut("\""+a[d]+"\""+"is not a number.<br>");
       putOut(turnstr[turn]+(stonelist[turn].length+1)+"> ");
       return form1.command.value;
     }
