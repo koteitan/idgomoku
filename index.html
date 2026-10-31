@@ -3,6 +3,7 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <script type="text/javascript" src="./exarray.js"></script>
+<script type="text/javascript" src="./idgomoku_ai.js"></script>
 <script type="text/javascript" src="./idgomoku.js"></script>
 <style><!--
   body{font-family:Segoe UI; color:black; background-color:#CC8800}  
@@ -22,6 +23,13 @@
 <body>
 <h1 style="font-style:italic;vertical-align:top">Infinite Dimensional Gomoku <img src="logo.png"></h1>
 <table>
+<tr><td>mode :</td>
+<td>
+<label><input type=radio name=mode value="com-human" checked onchange="initGame()">COM-&gt;HUMAN</label>
+<label><input type=radio name=mode value="human-com" onchange="initGame()">HUMAN-&gt;COM</label>
+<label><input type=radio name=mode value="human-human" onchange="initGame()">HUMAN-&gt;HUMAN</label>
+<label><input type=radio name=mode value="com-com" onchange="initGame()">COM-&gt;COM</label>
+</td></tr>
 <tr><td>input:</td>
 <td><form name=form1><input name=command type=text id="inputwindow" value="1" class="console" onkeydown="if(window.event.keyCode==13){form1.command.value=receiveCommand(form1.command.value);return false;}"></input> <input type=button value=send onclick="javscript:form1.command.value=receiveCommand(form1.command.value);"></form></td>
 
@@ -37,7 +45,9 @@
 <hr>
   <h2>遊び方:</h2>
   <ul>
-    <li>人間 vs 人間のゲームです。</li>
+    <li>mode で対戦の形を選びます。左が先手(黒)、右が後手(白)です。<br>
+    COM-&gt;HUMAN: COM が黒、人間が白。HUMAN-&gt;COM: 人間が黒、COM が白。HUMAN-&gt;HUMAN: 人間どうし。COM-&gt;COM: COM どうし。<br>
+    mode を変えるとゲームが最初からになります。</li>
     <li>石を置きたい座標をスペースで区切ってinputに入力してください。<br>
     たとえば、座標(1,0,2)に置きたいときは "1 0 2" と入力します。</li>
     <li>先手(黒)がすでに(0)に打っている状態から始まります。</li>
@@ -47,7 +57,9 @@
   </ul>
   <h2>How to Play:</h2>
   <ul>
-    <li>This game is for only human player vs human player.</li>
+    <li>Choose the players with mode. The left one is the first player (black), the right one is the second player (white).<br>
+    COM-&gt;HUMAN: COM is black, you are white. HUMAN-&gt;COM: you are black, COM is white. HUMAN-&gt;HUMAN: human vs human. COM-&gt;COM: COM vs COM.<br>
+    Changing the mode restarts the game.</li>
     <li>Please type the location with a space you want to put into input window.<br>
     For example, the stone is put at (1,0,2) with the input "1 0 2".</li>
     <li>The game is started after the first player(black) put a black stone at (0).</li>

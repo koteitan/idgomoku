@@ -7,10 +7,26 @@ var turn = 0;
 var turnstr=["black","white"];
 var maxdims = 1;
 var stonelist=[]; //stoned[p][s][d]=location of s th stone of player p in dim d.
+var isCom    = [false,false]; //isCom[p]=true when player p is COM
+var COM_DELAY = 500; //[ms] wait before COM's move in COM vs COM
+var gameId   = 0;   //incremented by initGame to cancel the COM of an old game
+var thinking = false;
+//get game mode from radio buttons ----------
+var getIsCom=function(){
+  var checked=document.querySelector('input[name="mode"]:checked');
+  var mode=checked?checked.value:"com-human";
+  if(mode=="com-human") return [true ,false];
+  if(mode=="human-com") return [false,true ];
+  if(mode=="com-com"  ) return [true ,true ];
+  return [false,false];
+};
 //initialize game----------------------------
 var initGame=function(){
+  gameId++;
+  thinking=false;
+  isCom=getIsCom();
   document.getElementById("console").innerHTML = "";
-  putOut("GAME START!<br>");  
+  putOut("GAME START!<br>");
   stonelist=[
     [//p=0
       [0]//s=0
@@ -25,6 +41,7 @@ var initGame=function(){
   if(debug){
     putDebug("stonelist="+stonelist.toString()+"<br>");
   }
+  startComIfTurn();
 };
 //when push send button ---------------------
 var receiveCommand=function(str){
@@ -39,12 +56,13 @@ var receiveCommand=function(str){
       return "";
     }
   }
+  if(thinking || isCom[turn]) return getIn(); // COM's turn
   if(!a.length%2!=0){
     putOut("error.");
     return "";
   }
   var dims = a.length;
-  
+
   //new stone
   var newstone=new Array(dims); // newstone[d]=location of the new stone
   for(var d=0;d<dims;d++){
@@ -67,11 +85,34 @@ var receiveCommand=function(str){
     putOut(turnstr[turn]+(stonelist[turn].length+1)+"> ");
     return form1.command.value;
   }
-  
+
+  if(playMove(newstone)) return ""; //game is over
+  startComIfTurn();
+  return form1.command.value;
+};
+//COM plays when it is COM's turn ----------
+var startComIfTurn=function(){
+  if(!isCom[turn]) return;
+  thinking=true;
+  putOut("(thinking...)");
+  var id=gameId;
+  setTimeout(function(){ //let the browser draw the output first
+    if(id!=gameId) return;
+    var m=comChooseMove(stonelist,turn);
+    if(id!=gameId) return;
+    thinking=false;
+    var con=document.getElementById("console");
+    con.innerHTML=con.innerHTML.replace(/\(thinking\.\.\.\)$/,"");
+    if(!playMove(m)) startComIfTurn(); //next COM in COM vs COM
+  },(isCom[0]&&isCom[1])?COM_DELAY:50);
+};
+/* put the stone of the current player on newstone.
+  returns true when the game is over. */
+var playMove=function(newstone){
   //put
   stonelist[turn].push(newstone);
   if(maxdims<newstone.length) maxdims=newstone.length;
-  
+
   //out
   putOut("(");
   for(var d=0;d<maxdims;d++){
@@ -81,70 +122,37 @@ var receiveCommand=function(str){
     if(d!=maxdims-1) putOut(",");
   }
   putOut(")<br>");
-  //judge win
 
-  //init checked direction
-  var dir=new Array(maxdims);
-  for(var d=0;d<maxdims;d++) dir[d]=-1;
-  
-  //check for any direction
-  while(true){
-    //dir all zero check
-    var allzero=true;
-    for(var d=0;d<maxdims;d++){
-      if(dir[d]!=0){
-        allzero=false;
-        break;
-      }
-    }
-    if(allzero){
-      dir[0]++;
-      continue; // ignore all zero
-    }
-    
-    //count number of series
-    var c=1;
-    c+=countSeries(newstone,dir,+1);
-    c+=countSeries(newstone,dir,-1);
-    if(turn==0 && c>5){
-      alert(turnstr[1]+" won! (too long for black)<br>");
-      initgame();
-      return;
-    }
-    if(turn==0 && c==5){
-      alert(turnstr[0]+" won!");
-      initgame();
-      return;
-    }
-    if(turn==1 && c>=5){
-      alert(turnstr[1]+" won!");
-      initgame();
-      return;
-    }
-    //inclement dir
-    var islast=true;
-    for(var d=0;d<maxdims;d++){
-      if(dir[d]<+1){
-        dir[d]+=1;
-        islast=false;
-        break;
-      }else{
-        dir[d]=0;
-      }
-    }
-    if(islast) break;
-  }//while
-  
+  //judge win
+  var r=judgeMove(stonelist,newstone,turn);
+  if(r==RESULT_LOSE){ // black made 6 or more
+    gameOver(turnstr[1]+" won! (too long for black)");
+    return true;
+  }
+  if(r==RESULT_WIN){
+    gameOver(turnstr[turn]+" won!");
+    return true;
+  }
+
   //next turn
   turn=(turn+1) % 2;
   putOut(turnstr[turn]+(stonelist[turn].length+1)+"> ");
-  
+
   //debugout
   document.getElementById("debugout").innerHTML="";
   if(debug){
     putDebug("stonelist="+stonelist.toString()+"<br>");
   }
-  return form1.command.value;
+  return false;
+};
+var gameOver=function(msg){
+  putOut(msg+"<br>");
+  var id=gameId;
+  setTimeout(function(){ //show the last move before alert
+    if(id!=gameId) return;
+    alert(msg);
+    initGame();
+  },50);
 };
 var putOut=function(str){
   document.getElementById("console").innerHTML += str;
@@ -163,8 +171,8 @@ var getIn=function(){
 */
 var getStone=function(place){
   var maxdims2 = maxdims; //max number of dimensions including place
-  if(maxdims2<place.length) maxdims2=place.length; 
-  
+  if(maxdims2<place.length) maxdims2=place.length;
+
   for(var p=0;p<2;p++){
     for(var s=0;s<stonelist[p].length;s++){
       var isfound=true;
@@ -183,30 +191,3 @@ var getStone=function(place){
   }// for p
   return -1;
 }
-var countSeries=function(newstone,dir,sign){
-  var turn = getStone(newstone);
-  var c=0;
-  for(var x=1;x<5;x++){
-    var checked=new Array(maxdims);
-    for(var d=0;d<maxdims;d++){
-      var nsl=0;
-      if(d<newstone.length) nsl=newstone[d];
-      checked[d]=nsl+dir[d]*sign*x;
-    }
-    if(getStone(checked)!=turn){
-      return c;
-    }else{
-      c++;
-    }
-  }
-  return c;
-}
-
-
-
-
-
-
-
-
-
